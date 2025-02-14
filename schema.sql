@@ -1,4 +1,3 @@
-CREATE DATABASE IF NOT EXISTS test;
 
 -- Create users table
 CREATE TABLE IF NOT EXISTS `users` (
