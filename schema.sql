@@ -1,3 +1,5 @@
+CREATE DATABASE IF NOT EXISTS test;
+
 -- Create users table
 CREATE TABLE IF NOT EXISTS `users` (
     `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -10,16 +12,14 @@ CREATE TABLE IF NOT EXISTS `users` (
     `deleted_at` DATETIME DEFAULT NULL
 );
 
-
 -- Create profiles table
 CREATE TABLE IF NOT EXISTS `profiles` (
     `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     `img` TEXT DEFAULT NULL,
     `website` VARCHAR(255) DEFAULT NULL,
     `user_id` BIGINT,
-    FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
 );
-
 
 -- Create tags table
 CREATE TABLE IF NOT EXISTS `tags` (
@@ -32,21 +32,10 @@ CREATE TABLE IF NOT EXISTS `tags` (
     `deleted_at` DATETIME DEFAULT NULL
 );
 
-
--- Pivot table for tags and posts (many-to-many relationship)
-CREATE TABLE IF NOT EXISTS `tag_posts` (
-    `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-    `tag_id` BIGINT NOT NULL,
-    `post_id` BIGINT NOT NULL,
-    FOREIGN KEY (`tag_id`) REFERENCES `tags`(`id`) ON DELETE CASCADE ON UPDATE CASCADE, 
-    FOREIGN KEY (`post_id`) REFERENCES `posts`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-
 -- Create posts table
 CREATE TABLE IF NOT EXISTS `posts` (
     `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-    `name` VARCHAR(255) NOT NULL, 
+    `name` VARCHAR(255) NOT NULL,
     `status` TINYINT(1) DEFAULT 1, 
     `img` TEXT DEFAULT NULL,
     `des` TEXT DEFAULT NULL,
@@ -55,9 +44,16 @@ CREATE TABLE IF NOT EXISTS `posts` (
     `deleted_at` DATETIME DEFAULT NULL
 );
 
+-- Pivot table for tags and posts (many-to-many relationship)
+CREATE TABLE IF NOT EXISTS `tag_posts` (
+    `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    `tag_id` BIGINT NOT NULL,
+    `post_id` BIGINT NOT NULL,
+    FOREIGN KEY (`tag_id`) REFERENCES `tags`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`post_id`) REFERENCES `posts`(`id`) ON DELETE CASCADE
+);
 
-
--- ALTER TABLES
+-- Alter tables
 ALTER TABLE `users`
 ADD COLUMN `last_login` DATETIME DEFAULT NULL;
 
