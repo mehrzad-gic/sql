@@ -32,8 +32,8 @@ CREATE TABLE IF NOT EXISTS `sellers`(
     `slug` VARCHAR(255) UNIQUE,
     `status` TINYINT(1) DEFAULT 1, 
     `user_id` INT DEFAULT NULL,
-    `likes` BIGINT DEFAULT 0,
-    `dislikes` BIGINT DEFAULT 0,
+    `likes_count` BIGINT DEFAULT 0,
+    `dislikes_count` BIGINT DEFAULT 0,
     `products_count` BIGINT DEFAULT 0,
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -76,7 +76,8 @@ CREATE TABLE IF NOT EXISTS `posts` (
     `img` TEXT DEFAULT NULL,
     `des` TEXT DEFAULT NULL,
     `likes_count` BIGINT DEFAULT 0,
-    `dis_likes_count` BIGINT DEFAULT 0,
+    `dislikes_count` BIGINT DEFAULT 0,
+    `comments_count` BIGINT DEFAULT 0,
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at` DATETIME DEFAULT NULL
@@ -146,6 +147,45 @@ CREATE TABLE IF NOT EXISTS `brands`(
     `deleted_at` DATETIME DEFAULT NULL,
     FOREIGN KEY `category_id` REFERENCES `categories`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+
+-- Products Table
+CREATE TABLE IF NOT EXISTS `products`(
+
+    `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    `name` VARCHAR(255) NOT NULL,
+    `category_id` BIGINT NOT NULL,
+    `brand_id` BIGINT NOT NULL,
+    `seller_id` BIGINT NOT NULL,
+    `slug` VARCHAR(255) UNIQUE,
+    `status` TINYINT(1) DEFAULT 1, 
+    `img` TEXT DEFAULT NULL,
+    `des` TEXT DEFAULT NULL,
+    `count` BIGINT DEFAULT 0,
+    `likes_count` BIGINT DEFAULT 0,
+    `comments_count` BIGINT DEFAULT 0,
+    `dislikes_count` BIGINT DEFAULT 0,
+
+    --info 
+    `os` TINYINT NOT NULL,
+    `os_version` INT NOT NULL,
+    `region` ENUM('china','usa','asia','europe') NOT NULl,
+    `weight` TINYINT NOT NULL,
+    `display` TEXT NOT NULL COMMENT('this a field that include phone display info in Json , like size,hz,type,guard,ip'),
+    `camera` TEXT NOT NULL COMMENT('this a field that include phone camera info in Json'),
+    `year` VARCHAR(100) NOT NULL,
+    `battery` VARCHAR(100) NOT NULL,
+    `cpu` VARCHAR(100) NOT NULL,
+    `is_charger` TINYINT NOT NULL,
+    `charger` VARCHAR(100) NULL,
+
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` DATETIME DEFAULT NULL,
+    FOREIGN KEY `category_id` REFERENCES `categories`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY `brand_id` REFERENCES `brands`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY `seller_id` REFERENCES `sellers`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+) 
 
 
 
