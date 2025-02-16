@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `user_addresses` (
     `postal_code` VARCHAR(255) NOT NULL,
     `city_id` BIGINT NOT NULL,
     `street` VARCHAR(255) NOT NULL,
-    `plack` VARCHAR(255) NOT NULL, --! Typo: Consider renaming to `plaque` for clarity
+    `plack` VARCHAR(255) NOT NULL, 
     `floor` VARCHAR(255) NOT NULL,
     `user_id` BIGINT NOT NULL,
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -81,13 +81,13 @@ CREATE TABLE IF NOT EXISTS `user_addresses` (
 
 -- Sellers Table
 CREATE TABLE IF NOT EXISTS `sellers`(
-    `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY, --! Missing `id` column definition
+    `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL,
     `des` VARCHAR(255) NOT NULL,
     `img` TEXT NULL,
     `slug` VARCHAR(255) UNIQUE,
     `status` TINYINT(1) DEFAULT 1, 
-    `user_id` BIGINT DEFAULT NULL, --! Changed `INT` to `BIGINT` to match `users.id`
+    `user_id` BIGINT DEFAULT NULL,
     `likes_count` BIGINT DEFAULT 0,
     `dislikes_count` BIGINT DEFAULT 0,
     `products_count` BIGINT DEFAULT 0,
@@ -180,11 +180,11 @@ CREATE TABLE IF NOT EXISTS `comments` (
 
 -- Categories Table
 CREATE TABLE IF NOT EXISTS `categories`(
-    `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY, --! Fixed syntax for `id` column
+    `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL,
     `slug` VARCHAR(255) UNIQUE,
     `status` TINYINT(1) DEFAULT 1, 
-    `parent_id` BIGINT DEFAULT NULL, --! Changed `INT` to `BIGINT` for consistency
+    `parent_id` BIGINT DEFAULT NULL,
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at` DATETIME DEFAULT NULL
@@ -193,7 +193,7 @@ CREATE TABLE IF NOT EXISTS `categories`(
 
 -- Category Options
 CREATE TABLE IF NOT EXISTS `category_options`(
-    `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY, --! Fixed syntax for `id` column
+    `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL,
     `key` VARCHAR(255) NOT NULL,
     `type` ENUM('int','str','arr') NOT NULL,
@@ -208,11 +208,11 @@ CREATE TABLE IF NOT EXISTS `category_options`(
 
 -- Brands Table
 CREATE TABLE IF NOT EXISTS `brands`(
-    `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY, --! Fixed syntax for `id` column
+    `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL,
     `slug` VARCHAR(255) UNIQUE,
     `status` TINYINT(1) DEFAULT 1, 
-    `category_id` BIGINT DEFAULT NULL, --! Changed `INT` to `BIGINT` for consistency
+    `category_id` BIGINT DEFAULT NULL,
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at` DATETIME DEFAULT NULL,
@@ -230,7 +230,7 @@ CREATE TABLE IF NOT EXISTS `insurances`(
     `count` BIGINT DEFAULT 0,
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted_at` DATETIME DEFAULT NULL --! Removed trailing comma
+    `deleted_at` DATETIME DEFAULT NULL
 );
 
 
@@ -254,7 +254,7 @@ CREATE TABLE IF NOT EXISTS `products`(
     `sells_count` BIGINT DEFAULT 0,
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted_at` DATETIME DEFAULT NULL, --! Removed trailing comma
+    `deleted_at` DATETIME DEFAULT NULL,
     FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (`brand_id`) REFERENCES `brands`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (`seller_id`) REFERENCES `sellers`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -273,7 +273,7 @@ CREATE TABLE IF NOT EXISTS `product_colors`(
     `count` BIGINT DEFAULT 0,
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted_at` DATETIME DEFAULT NULL, --! Removed trailing comma
+    `deleted_at` DATETIME DEFAULT NULL,
     FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -292,14 +292,14 @@ CREATE TABLE IF NOT EXISTS `category_option_products`(
 CREATE TABLE IF NOT EXISTS `discounts`(
     `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL,
-    `start_date` DATETIME DEFAULT CURRENT_TIMESTAMP, --! Added `DEFAULT`
+    `start_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `end_date` DATETIME,
     `type` TINYINT DEFAULT 0 COMMENT 'if 0 ? percentage : price',
     `value` INT NOT NULL,
     `maximum` INT NOT NULL,
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted_at` DATETIME DEFAULT NULL --! Removed trailing comma
+    `deleted_at` DATETIME DEFAULT NULL
 );
 
 
@@ -308,7 +308,7 @@ CREATE TABLE IF NOT EXISTS `private_discounts`(
     `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL,
     `user_id` BIGINT NOT NULL,
-    `start_date` DATETIME DEFAULT CURRENT_TIMESTAMP, --! Added `DEFAULT`
+    `start_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `end_date` DATETIME,
     `type` TINYINT DEFAULT 0 COMMENT 'if 0 ? percentage : price',
     `value` INT NOT NULL,
@@ -325,7 +325,7 @@ CREATE TABLE IF NOT EXISTS `amazing_sells`(
     `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL,
     `product_id` BIGINT NOT NULL,
-    `start_date` DATETIME DEFAULT CURRENT_TIMESTAMP, --! Added `DEFAULT`
+    `start_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `end_date` DATETIME,
     `value` INT NOT NULL,
     `maximum` INT NOT NULL,
