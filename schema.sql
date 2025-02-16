@@ -336,6 +336,58 @@ CREATE TABLE IF NOT EXISTS `amazing_sells`(
 );
 
 
+-- Create carts table
+CREATE TABLE IF NOT EXISTS `carts` (
+    `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    `user_id` BIGINT NOT NULL,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` DATETIME DEFAULT NULL,
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- Create orders table
+CREATE TABLE IF NOT EXISTS `orders` (
+    `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    `user_id` BIGINT NOT NULL,
+    `total_amount` DECIMAL(10, 2) NOT NULL,
+    `status` ENUM('pending', 'completed', 'canceled') DEFAULT 'pending',
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` DATETIME DEFAULT NULL,
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+-- Create order_items table
+CREATE TABLE IF NOT EXISTS `order_items` (
+    `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    `order_id` BIGINT NOT NULL,
+    `product_id` BIGINT NOT NULL,
+    `quantity` INT NOT NULL,
+    `price` DECIMAL(10, 2) NOT NULL,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` DATETIME DEFAULT NULL,
+    FOREIGN KEY (`order_id`) REFERENCES `orders`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+-- Create payments table
+CREATE TABLE IF NOT EXISTS `payments` (
+    `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    `order_id` BIGINT NOT NULL,
+    `amount` DECIMAL(10, 2) NOT NULL,
+    `payment_method` ENUM('credit_card', 'paypal', 'bank_transfer') NOT NULL,
+    `status` ENUM('pending', 'completed', 'failed') DEFAULT 'pending',
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` DATETIME DEFAULT NULL,
+    FOREIGN KEY (`order_id`) REFERENCES `orders`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
 -- Alter tables
 ALTER TABLE `users`
 ADD COLUMN `last_login` DATETIME DEFAULT NULL;
