@@ -135,6 +135,33 @@ CREATE TABLE IF NOT EXISTS `categories`(
 );
 
 
+-- Category Options
+CREATE TABLE IF NOT EXISTS `category_options`(
+    `id` PRIMARY KEY AUTO_INCREMENT,
+    `name` VARCHAR(255) NOT NULL,
+    `key` VARCHAR(255) NOT NULL,
+    `type` ENUM('int','str','arr') NOT NULL,
+    `arr` TEXT NULL,
+    `category_id` BIGINT NOT NULL,
+    FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    -- `os` TINYINT NOT NULL,
+    -- `os_version` INT NOT NULL,
+    -- `region` ENUM('china','usa','asia','europe') NOT NULl,
+    -- `weight` TINYINT NOT NULL,
+    -- `display` TEXT NOT NULL COMMENT('this a field that include phone display info in Json , like size,hz,type,guard,ip'),
+    -- `camera` TEXT NOT NULL COMMENT('this a field that include phone camera info in Json'),
+    -- `year` VARCHAR(100) NOT NULL,
+    -- `battery` VARCHAR(100) NOT NULL,
+    -- `cpu` VARCHAR(100) NOT NULL,
+    -- `is_charger` TINYINT NOT NULL,
+    -- `charger` VARCHAR(100) NULL,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` DATETIME DEFAULT NULL
+);
+
+
+
 -- Brands Table
 CREATE TABLE IF NOT EXISTS `brands`(
     `id` PRIMARY KEY AUTO_INCREMENT,
@@ -149,11 +176,26 @@ CREATE TABLE IF NOT EXISTS `brands`(
 );
 
 
--- Products Table
-CREATE TABLE IF NOT EXISTS `products`(
-
+-- insurances 
+CREATE TABLE IF NOT EXISTS `insurances`(
     `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL,
+    `price` INT NOT NULL,
+    `slug` VARCHAR(255) UNIQUE,
+    `status` TINYINT(1) DEFAULT 1, 
+    `count` BIGINT DEFAULT 0,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` DATETIME DEFAULT NULL,
+) 
+
+
+-- Products Table
+CREATE TABLE IF NOT EXISTS `products`(
+    `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    `name` VARCHAR(255) NOT NULL,
+    `price` INT NOT NULL,
+    `maximum_discount` INT NOT NULL,
     `category_id` BIGINT NOT NULL,
     `brand_id` BIGINT NOT NULL,
     `seller_id` BIGINT NOT NULL,
@@ -165,20 +207,7 @@ CREATE TABLE IF NOT EXISTS `products`(
     `likes_count` BIGINT DEFAULT 0,
     `comments_count` BIGINT DEFAULT 0,
     `dislikes_count` BIGINT DEFAULT 0,
-
-    --info 
-    `os` TINYINT NOT NULL,
-    `os_version` INT NOT NULL,
-    `region` ENUM('china','usa','asia','europe') NOT NULl,
-    `weight` TINYINT NOT NULL,
-    `display` TEXT NOT NULL COMMENT('this a field that include phone display info in Json , like size,hz,type,guard,ip'),
-    `camera` TEXT NOT NULL COMMENT('this a field that include phone camera info in Json'),
-    `year` VARCHAR(100) NOT NULL,
-    `battery` VARCHAR(100) NOT NULL,
-    `cpu` VARCHAR(100) NOT NULL,
-    `is_charger` TINYINT NOT NULL,
-    `charger` VARCHAR(100) NULL,
-
+    `sells_count` BIGINT DEFAULT 0,
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at` DATETIME DEFAULT NULL,
@@ -186,6 +215,81 @@ CREATE TABLE IF NOT EXISTS `products`(
     FOREIGN KEY `brand_id` REFERENCES `brands`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY `seller_id` REFERENCES `sellers`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 ) 
+
+
+-- product_colors
+CREATE TABLE IF NOT EXISTS `product_colors`(
+    `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    `name` VARCHAR(255) NOT NULL,
+    `color_code` VARCHAR(255) NOT NULL,
+    `price` INT NOT NULL,
+    `product_id` BIGINT NOT NULL,
+    `slug` VARCHAR(255) UNIQUE,
+    `status` TINYINT(1) DEFAULT 1, 
+    `count` BIGINT DEFAULT 0,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` DATETIME DEFAULT NULL,
+    FOREIGN KEY `product_id` REFERENCES `products`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) 
+
+
+-- option_products pivotTable between category_options and products
+CREATE TABLE IF NOT EXISTS `category_option_products`(
+    `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    `option_id` BIGINT NOT NULL,
+    `product_id` BIGINT NOT NULL,
+    FOREIGN KEY (`option_id`) REFERENCES `category_options`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+)
+
+
+-- discounts
+CREATE TABLE IF NOT EXISTS `discounts`(
+    `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `name` VARCHAR(255) NOT NULL,
+    `start_date` DATETIME CURRENT_TIMESTAMP,
+    `end_date` DATETIME,
+    `type` TINYINT DEFAULT 0 COMMENT('if 0 ? percentage : price'),
+    `value` INT NOT NULL,
+    `maximum` INT NOT NULL,
+    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` DATETIME DEFAULT NULL,
+)
+
+
+-- private_discounts
+CREATE TABLE IF NOT EXISTS `private_discounts`(
+    `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    `name` VARCHAR(255) NOT NULL,
+    `user_id` BIGINT NOT NULL,
+    `start_date` DATETIME CURRENT_TIMESTAMP,
+    `end_date` DATETIME,
+    `type` TINYINT DEFAULT 0 COMMENT('if 0 ? percentage : price'),
+    `value` INT NOT NULL,
+    `maximum` INT NOT NULL,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` DATETIME DEFAULT NULL,
+    FOREIGN KEY `user_id` REFERENCES `users`(`id`) ON UPDATE CASCADE ON DELETE CASCADE
+)
+
+
+-- amazing_sells
+CREATE TABLE IF NOT EXISTS `amazing_sells`(
+    `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    `name` VARCHAR(255) NOT NULL,
+    `product_id` BIGINT NOT NULL,
+    `start_date` DATETIME CURRENT_TIMESTAMP,
+    `end_date` DATETIME,
+    `value` INT NOT NULL,
+    `maximum` INT NOT NULL,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` DATETIME DEFAULT NULL,
+    FOREIGN KEY `product_id` REFERENCES `products`(`id`) ON UPDATE CASCADE ON DELETE CASCADE
+)
 
 
 
