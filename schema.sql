@@ -2,11 +2,12 @@
 CREATE TABLE IF NOT EXISTS `users` (
     `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     `name` VARCHAR(255) DEFAULT '',
+    `ip` VARCHAR(255) DEFAULT '',
     `email` VARCHAR(255) UNIQUE,
     `email_verified_at` INT DEFAULT NULL,
     `slug` VARCHAR(255) UNIQUE,
     `password` VARCHAR(255),
-    `img` TEXT DEFAULT NULL,
+    `image` TEXT DEFAULT NULL,
     `status` TINYINT(1) DEFAULT 1, 
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -76,30 +77,17 @@ CREATE TABLE IF NOT EXISTS `sellers`(
     `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL,
     `des` VARCHAR(255) NOT NULL,
-    `img` TEXT NULL,
+    `image` TEXT NULL,
+    `images` TEXT NULL,
     `slug` VARCHAR(255) UNIQUE,
     `status` TINYINT(1) DEFAULT 1, 
     `user_id` BIGINT DEFAULT NULL,
-    `likes_count` BIGINT DEFAULT 0,
-    `dislikes_count` BIGINT DEFAULT 0,
+    `rate` DEFAULT 0,
     `products_count` BIGINT DEFAULT 0,
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at` DATETIME DEFAULT NULL,
     FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-
--- Create follows table
-CREATE TABLE IF NOT EXISTS `follows` (
-    `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-    `user_id` BIGINT NOT NULL,
-    `follower_id` BIGINT NOT NULL,
-    FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (`follower_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted_at` DATETIME DEFAULT NULL
 );
 
 
@@ -121,23 +109,11 @@ CREATE TABLE IF NOT EXISTS `posts` (
     `name` VARCHAR(255) NOT NULL,
     `slug` VARCHAR(255) UNIQUE,
     `status` TINYINT(1) DEFAULT 1, 
-    `img` TEXT DEFAULT NULL,
+    `image` TEXT DEFAULT NULL,
     `des` TEXT DEFAULT NULL,
     `likes_count` BIGINT DEFAULT 0,
     `dislikes_count` BIGINT DEFAULT 0,
     `comments_count` BIGINT DEFAULT 0,
-    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted_at` DATETIME DEFAULT NULL
-);
-
-
--- Create likes table for storing likes and dislikes across the application
-CREATE TABLE IF NOT EXISTS `likes` (
-    `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-    `value` INT NOT NULL,
-    `likeable_type` VARCHAR(255) NOT NULL,
-    `likeable_id` BIGINT NOT NULL,
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at` DATETIME DEFAULT NULL
@@ -237,7 +213,7 @@ CREATE TABLE IF NOT EXISTS `products`(
     `seller_id` BIGINT NOT NULL,
     `slug` VARCHAR(255) UNIQUE,
     `status` TINYINT(1) DEFAULT 1, 
-    `img` TEXT DEFAULT NULL,
+    `image` TEXT DEFAULT NULL,
     `des` TEXT DEFAULT NULL,
     `count` BIGINT DEFAULT 0,
     `rate` TINYINT,
