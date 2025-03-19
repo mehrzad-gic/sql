@@ -148,6 +148,8 @@ CREATE TABLE IF NOT EXISTS `comments` (
 CREATE TABLE IF NOT EXISTS `categories`(
     `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL,
+    `icon_type` TINYINT DEFAULT 0 COMMENT'0 => simple , 1 => svg-Code'
+    `icon` TEXT(500) NOT NULL,
     `slug` VARCHAR(255) UNIQUE,
     `status` TINYINT(1) DEFAULT 1, 
     `parent_id` BIGINT DEFAULT NULL,
@@ -212,7 +214,7 @@ CREATE TABLE IF NOT EXISTS `products`(
     `slug` VARCHAR(255) UNIQUE,
     `status` TINYINT(1) DEFAULT 1, 
     `image` TEXT DEFAULT NULL,
-    `descriptioncription` TEXT DEFAULT NULL,
+    `description` TEXT DEFAULT NULL,
     `count` BIGINT DEFAULT 0,
     `rate` TINYINT,
     `comments_count` BIGINT DEFAULT 0,
@@ -310,6 +312,7 @@ CREATE TABLE IF NOT EXISTS `carts` (
     `deleted_at` DATETIME DEFAULT NULL,
     FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
 
 -- Create orders table
 CREATE TABLE IF NOT EXISTS `orders` (
