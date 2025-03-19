@@ -3,24 +3,14 @@ CREATE TABLE IF NOT EXISTS `users` (
     `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     `name` VARCHAR(255) DEFAULT '',
     `email` VARCHAR(255) UNIQUE,
+    `email_verified_at` INT DEFAULT NULL,
     `slug` VARCHAR(255) UNIQUE,
     `password` VARCHAR(255),
+    `img` TEXT DEFAULT NULL,
     `status` TINYINT(1) DEFAULT 1, 
-    `followers_count` BIGINT DEFAULT 0,
-    `followings_count` BIGINT DEFAULT 0,
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at` DATETIME DEFAULT NULL
-);
-
-
--- Create profiles table
-CREATE TABLE IF NOT EXISTS `profiles` (
-    `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-    `img` TEXT DEFAULT NULL,
-    `website` VARCHAR(255) DEFAULT NULL,
-    `user_id` BIGINT,
-    FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
 );
 
 
@@ -28,6 +18,7 @@ CREATE TABLE IF NOT EXISTS `profiles` (
 CREATE TABLE IF NOT EXISTS `countries`(
     `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     `name` VARCHAR(255) DEFAULT '',
+    `slug` VARCHAR(255) UNIQUE,
     `status` TINYINT(1) DEFAULT 1, 
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -39,6 +30,7 @@ CREATE TABLE IF NOT EXISTS `countries`(
 CREATE TABLE IF NOT EXISTS `provinces`(
     `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     `name` VARCHAR(255) DEFAULT '',
+    `slug` VARCHAR(255) UNIQUE,
     `status` TINYINT(1) DEFAULT 1, 
     `country_id` BIGINT NOT NULL, 
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -248,9 +240,8 @@ CREATE TABLE IF NOT EXISTS `products`(
     `img` TEXT DEFAULT NULL,
     `des` TEXT DEFAULT NULL,
     `count` BIGINT DEFAULT 0,
-    `likes_count` BIGINT DEFAULT 0,
+    `rate` TINYINT,
     `comments_count` BIGINT DEFAULT 0,
-    `dislikes_count` BIGINT DEFAULT 0,
     `sells_count` BIGINT DEFAULT 0,
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
