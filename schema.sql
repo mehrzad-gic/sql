@@ -261,6 +261,7 @@ CREATE TABLE IF NOT EXISTS `products`(
     `slug` VARCHAR(255) UNIQUE,
     `status` TINYINT(1) DEFAULT 1, 
     `image` TEXT DEFAULT NULL,
+    `images` TEXT DEFAULT NULL,
     `description` TEXT DEFAULT NULL,
     `count` BIGINT DEFAULT 0,
     `rate` TINYINT,
@@ -291,9 +292,25 @@ CREATE TABLE IF NOT EXISTS `product_colors`(
     FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+-- product_sizes
+CREATE TABLE IF NOT EXISTS `product_sizes`(
+    `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    `name` VARCHAR(255) NOT NULL,
+    `price` INT NOT NULL,
+    `product_id` BIGINT NOT NULL,
+    `slug` VARCHAR(255) UNIQUE,
+    `status` TINYINT(1) DEFAULT 1, 
+    `count` BIGINT DEFAULT 0,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` DATETIME DEFAULT NULL,
+    FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
 
 -- option_products pivotTable between category_options and products
-CREATE TABLE IF NOT EXISTS `category_option_products`(
+CREATE TABLE IF NOT EXISTS `category_option_product`(
     `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     `option_id` BIGINT NOT NULL,
     `product_id` BIGINT NOT NULL,
