@@ -216,7 +216,7 @@ CREATE TABLE IF NOT EXISTS `products`(
     `image` TEXT DEFAULT NULL,
     `description` TEXT DEFAULT NULL,
     `count` BIGINT DEFAULT 0,
-    `rate` TINYINT,
+    `rate` DECIMAL(3,1),
     `comments_count` BIGINT DEFAULT 0,
     `sells_count` BIGINT DEFAULT 0,
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -355,6 +355,19 @@ CREATE TABLE IF NOT EXISTS `payments` (
     FOREIGN KEY (`order_id`) REFERENCES `orders`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+
+-- reviews
+CREATE TABLE IF NOT EXISTS `reviews`(
+    `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+    `title` VARCHAR(255) NOT NULL,
+    `body` TEXT(1000) NOT NULL,
+    `rate` TINYINT NOT NULL,
+    `files` TEXT NULL,
+    `user_id` BIGINT NOT NULL,
+    `product_id` BIGINT NOT NULL,
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+);
 
 -- Alter tables
 ALTER TABLE `users`
